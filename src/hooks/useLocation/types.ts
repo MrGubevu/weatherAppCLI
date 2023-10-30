@@ -9,7 +9,13 @@ interface CurrentCoordinates {
     message: string
   }
 
+  interface Location {
+    latitude: number;
+    longitude: number;
+}
+
   export type {
     CurrentCoordinates,
-    GeolocationError
+    GeolocationError,
+    Location
   }

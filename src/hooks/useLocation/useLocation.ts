@@ -1,44 +1,55 @@
-// hooks/useLocation.ts
-import Geolocation from "@react-native-community/geolocation";
-import  { GeoPosition, GeoError } from "react-native-geolocation-service";
-import { CurrentCoordinates } from "../useLocation/types";
+import { useEffect, useState } from 'react';
+import { Platform, PermissionsAndroid } from 'react-native';
+import GetLocation from 'react-native-get-location';
 
-export function useLocation(): {
-  getCurrentLocation: () => Promise<CurrentCoordinates>;
-  watchLocation: (callback: (location: CurrentCoordinates) => void) => number;
-  clearWatch: (watchId: number) => void;
-} {
-  const getCurrentLocation = (): Promise<CurrentCoordinates> =>
-    new Promise((resolve, reject) => {
-      Geolocation.getCurrentPosition(
-        (position: GeoPosition) => {
-          const { latitude, longitude } = position.coords;
-          resolve({ latitude, longitude });
-        },
-        (error: GeoError) => {
-          reject(error);
-        },
-        { enableHighAccuracy: true } // Removed 'maximumAge'
-      );
-    });
+const useLocation = () => {
+  const [permissionGranted, setPermissionGranted] = useState(false); 
 
-  const watchLocation = (callback: (location: CurrentCoordinates) => void): number => {
-    const watchId = Geolocation.watchPosition(
-      (position: GeoPosition) => {
-        const { latitude, longitude } = position.coords;
-        callback({ latitude, longitude });
-      },
-      (error: GeoError) => {
-        console.error("Error watching location:", error);
-      },
-      { enableHighAccuracy: true } // Removed 'maximumAge'
-    );
-    return watchId;
-  };
+  useEffect(() => {
+    async function getLocalPermission() {
+      if (Platform.OS === 'android') {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+              title: 'Location Permission',
+              message: 'This app needs location permission to determine your current location.',
+              buttonNegative: 'DENY',
+              buttonPositive: 'ALLOW',
+            }
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            setPermissionGranted(true);
+            getCurrentLocation();
+          } else {
+            console.log('Location permission denied');
+          }
+        } catch (error) {
+          console.error('Error requesting location permission:', error);
+        }
+      }
+    }
 
-  const clearWatch = (watchId: number): void => {
-    Geolocation.clearWatch(watchId);
-  };
+    getLocalPermission();
+  }, []);
 
-  return { getCurrentLocation, watchLocation, clearWatch };
-}
+  function getCurrentLocation() {
+    if (permissionGranted) {
+      GetLocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 60000,
+      })
+        .then(location => {
+          console.log(location);
+        })
+        .catch(error => {
+          const { code, message } = error;
+          console.warn('Location error:', code, message);
+        });
+    } else {
+      console.log('Permission not granted, cannot get location.');
+    }
+  }
+};
+
+export default useLocation;

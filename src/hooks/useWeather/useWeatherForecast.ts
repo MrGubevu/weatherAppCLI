@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { WeatherForecastData } from "./types";
 
+
 export const useForecastData = () => {
   const [forecastData, setForecastData] = useState<WeatherForecastData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -11,7 +12,7 @@ export const useForecastData = () => {
       "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}";
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      (position: { coords: { latitude: number; longitude: number; }; }) => {
         const { latitude, longitude } = position.coords;
         const url = apiUrl
           .replace("{lat}", latitude.toString())
@@ -39,7 +40,7 @@ export const useForecastData = () => {
             setIsLoading(false);
           });
       },
-      (error) => {
+      (error: Error) => {
         console.error("Error getting user's location:", error);
         setIsLoading(false);
       },

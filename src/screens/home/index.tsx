@@ -1,31 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useWeather } from '../../hooks/useWeather/useWeather';
 import { TodaysWeather } from '../../hooks/useWeather/types';
-import WeatherComponent from '../../components/weatherForecastView/index';
-import  { View, Text, SafeAreaView } from "react-native";
+import WeatherForecastView from '../../components/weatherForecastView';
+import { SafeAreaView, View, Text } from 'react-native';
+import CurrentDayWeatherSummary from '../../components/currentDayWeatherSummary/index';
+import CurrentDayWeatherView from '../../components/currentDayWeatherView';
 
-function CurrentDayWeatherView({
-  todaysWeather: {
-    temperature,
-    tempLow,
-    tempMax,
-    description,
-  },
-}: {
-  todaysWeather: TodaysWeather;
-}) {
-  return (
-    <SafeAreaView>
-      <View>
-        <Text>Today's Weather</Text>
-      <Text>{temperature}°C</Text>
-      <Text>Description: {description}</Text>
-      <Text>Low Temperature: {tempLow}°C</Text>
-      <Text>High Temperature: {tempMax}°C</Text>
-      </View>
-    </SafeAreaView>
-  );
-}
+
+
 
 export const Home: React.FC = () => {
   const { getCurrentWeather } = useWeather();
@@ -44,14 +26,20 @@ export const Home: React.FC = () => {
   }, [getCurrentWeather]);
 
   return (
-    <SafeAreaView>
-      <View>
+    <View>
      
       {weatherData && <CurrentDayWeatherView todaysWeather={weatherData} />}
-      <WeatherComponent />
+
+      <CurrentDayWeatherSummary 
+      backgroundColor={''} 
+      minimumTemperature={minimumTemperature} 
+      maximumTemperature={maximumTemperature} 
+      currentTemperature={temperature}/>
+      <WeatherForecastView />
       
-      </View>
-    </SafeAreaView>
+      
+    </View>
+    
   );
 };
 

@@ -1,3 +1,4 @@
 {
-  "extends": "@tsconfig/react-native/tsconfig.json"
+  "extends": "@tsconfig/react-native/tsconfig.json",
+  "include": ["src/**/*.ts", "react-native.d.ts", "src/hooks/useLocation/getLocation.tsx", "src/components/currentDayWeatherSummary/index.tsx", "src/components/tempretureInDegrees/index.tsx"],
 }

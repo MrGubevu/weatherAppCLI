@@ -31,7 +31,7 @@ export function useWeather(): {
         }
       );
 
-        
+ 
 
       if (geolocationResponse.data && geolocationResponse.data.location) {
         const { lat, lng } = geolocationResponse.data.location;

@@ -1,8 +1,8 @@
 interface TodaysWeather {
     temperature: number;
     description: string;
-    tempLow: number;
-    tempMax: number;
+    minimumTempreture: number;
+    maximumTempreture: number;
   }
 
   interface WeatherApiResponse {
@@ -22,8 +22,16 @@ interface TodaysWeather {
     
   }
 
+  interface WeatherForecast {
+    type: string;
+    temperature: number;
+    day: string;
+  }
+
+
 export type {
     TodaysWeather,
     WeatherApiResponse,
-    WeatherForecastData
+    WeatherForecastData,
+    WeatherForecast
 }

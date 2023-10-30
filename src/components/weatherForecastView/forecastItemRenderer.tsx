@@ -1,9 +1,9 @@
 // forecastItemRenderer.ts
 import React from "react";
 import { View, Text, Image } from "react-native";
-import { ForecastData } from "../../hooks/useWeather/types";
+import { WeatherForecastData } from "../../hooks/useWeather/types";
 
-export const renderForecastItem = ({ item }: { item: ForecastData }) => {
+export const renderForecastItem = ({ item }: { item: WeatherForecastData }) => {
   const timestamp = item.dt;
   const date = new Date(timestamp * 1000);
   const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "long" });
